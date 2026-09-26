@@ -1,0 +1,114 @@
+/* Cloud Chase / Orion Lab Studios - shared style for the support site.
+   The game's night gradient (#1C2438 -> #05070C), Cinzel for display type and
+   Cormorant Garamond for reading type, as in the game's story cards and films.
+   No pictures: DROP 10 (Pep, 2026-09-24) rules out AI pictures, and nothing else
+   is needed. */
+
+:root {
+  --sky-top: #1C2438;
+  --sky-bottom: #05070C;
+  --ink: #F2EBDD;
+  --ink-mid: #D8D0C0;
+  --ink-dim: #9C9486;
+  --gold: #E3B53A;
+  --rule: rgba(242, 235, 221, 0.18);
+  --panel: rgba(255, 255, 255, 0.04);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%) fixed;
+  background-color: var(--sky-bottom);
+  color: var(--ink-mid);
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+header.site {
+  text-align: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem;
+}
+
+.brand {
+  font-family: "Cinzel", Georgia, serif;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1.9rem;
+}
+
+nav.site {
+  margin-top: 0.8rem;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+}
+
+nav.site a {
+  color: var(--ink-dim);
+  text-decoration: none;
+  margin: 0 0.6rem;
+  display: inline-block;
+  padding: 0.4rem 0;
+}
+
+nav.site a:hover, nav.site a:focus { color: var(--gold); }
+
+h1, h2, h3 {
+  font-family: "Cinzel", Georgia, serif;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+}
+
+h1 { font-size: 1.9rem; text-align: center; margin-top: 0; }
+h2 { font-size: 1.25rem; margin-top: 2.4rem; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
+h3 { font-size: 1.05rem; margin-top: 1.6rem; }
+
+p.lede { font-size: 1.35rem; color: var(--ink); text-align: center; font-style: italic; }
+p.meta { text-align: center; color: var(--ink-dim); font-size: 1rem; }
+
+a { color: var(--gold); }
+
+strong { color: var(--ink); }
+
+ul { padding-left: 1.3rem; }
+li { margin: 0.3rem 0; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.4rem 0;
+}
+
+/* Tables scroll inside themselves on a phone, never the page. */
+.table-scroll { overflow-x: auto; margin: 1rem 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--rule); }
+th { color: var(--ink); font-family: "Cinzel", Georgia, serif; font-size: 0.8rem; letter-spacing: 0.08em; font-weight: 600; }
+
+footer.site {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+}

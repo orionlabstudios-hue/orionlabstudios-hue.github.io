@@ -1,0 +1,10 @@
+# app-ads.txt for Orion Lab Studios - PLACEHOLDER, NOT LIVE.
+#
+# Google AdMob reads this file from the root of the developer website listed in
+# the store listing. Once King and Pep open the AdMob account, AdMob shows the
+# exact line to paste here; it has this shape:
+#
+#   google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# Replace the publisher id with the real one and remove the leading "# " from
+# that line. Until then this file lists no seller on purpose.
