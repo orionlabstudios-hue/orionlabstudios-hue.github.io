@@ -1,8 +1,23 @@
+# The public top 100 for players under 16 (NEXT.md DROP 110 item 1).
+#
+# FOR THE orionlabstudios-hue.github.io REPOSITORY, NOT THIS ONE. King or Pep
+# copy this file to .github/workflows/publish-ranking.yml there, and
+# publish_top100.sh to tools/publish_top100.sh there (FOR-KING-AND-PEP has the
+# steps, including the four secrets). Every 30 minutes it rewrites
+# ranking/top100.json and commits it only when it changed.
 name: Publish ranking
 on:
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch: {}
+  # A change to the job itself runs the job (NEXT.md DROP 135), so a fix is
+  # proven by the push that delivers it. Only these two files: the bot's own
+  # ranking/top100.json commits never match, and GITHUB_TOKEN pushes do not
+  # start workflows anyway, so this cannot loop.
+  push:
+    paths:
+      - "tools/publish_top100.sh"
+      - ".github/workflows/publish-ranking.yml"
 permissions:
   contents: write
 jobs:
@@ -22,6 +37,7 @@ jobs:
           git config user.name "ranking-bot"
           git config user.email "ranking-bot@users.noreply.github.com"
           git add ranking/top100.json
+          # The "updated" time changes every run; commit only when the board did.
           if git diff --cached --quiet -I '"updated"'; then echo "no change"; exit 0; fi
           git commit -m "Ranking: top 100 updated"
           git push

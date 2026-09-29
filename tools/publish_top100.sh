@@ -37,18 +37,60 @@ OUT="${1:-ranking/top100.json}"
 BOARDS=("endless_weekly:weekly" "endless_alltime:alltime")
 MARKS=(200 500 1000 2000 5000 10000 20000 50000 100000)
 
-token=$(curl -sf -X POST -u "${UGS_KEY_ID}:${UGS_SECRET_KEY}" \
+# EVERY REQUEST SAYS WHAT FAILED (NEXT.md DROP 135). Runs 2 and 3 died with
+# nothing but "exit code 22" (curl -f on an HTTP 4xx/5xx) and no way to tell
+# which request. call <step> <curl args...>: the response body goes to a file,
+# the status is checked here, and on a failure the step, the HTTP status and
+# the first 300 characters of the reply are printed - never a request header,
+# never the key, never a token (a failed reply carries an error, not a token;
+# and GitHub masks every secret's value in the log regardless). Passing server
+# errors are retried three times. On success it prints the body to stdout.
+BODY=$(mktemp)
+call() {
+  local step="$1"; shift
+  local code
+  code=$(curl -sS -o "$BODY" -w '%{http_code}' --retry 3 --retry-all-errors --retry-delay 2 "$@") || code="${code:-000}"
+  if [ "${code:0:1}" != "2" ]; then
+    echo "FAILED: $step - HTTP $code - $(head -c 300 "$BODY" | tr '\n' ' ')" >&2
+    return 22
+  fi
+  cat "$BODY"
+}
+
+# THE EMPTY BODY IS THE FIX FOR RUNS 2 AND 3 (29 Sep). A bare "-X POST" sends
+# no Content-Length, and Unity's front end now refuses that before it even
+# reads the credentials: measured from King's PC with dummy credentials, the
+# bare POST answers HTTP 411 "POST requests require a Content-length header",
+# the same POST with -d '' answers HTTP 401 "Authentication failed" - it gets
+# through to the login check. This is the job's first request, which is why
+# it failed in 5 seconds with curl's exit 22.
+token=$(call "token exchange" -X POST -d '' -u "${UGS_KEY_ID}:${UGS_SECRET_KEY}" \
   "https://services.api.unity.com/auth/v1/token-exchange?projectId=${UGS_PROJECT_ID}&environmentId=${UGS_ENV_ID}" \
   | jq -er '.accessToken')
 
 get() {   # get <leaderboardId> <offset> <limit>
-  curl -sf -H "Authorization: Bearer ${token}" \
+  call "scores $1 offset $2" -H "Authorization: Bearer ${token}" \
     "https://leaderboards.services.api.unity.com/v1/projects/${UGS_PROJECT_ID}/leaderboards/$1/scores?offset=$2&limit=$3&includeMetadata=true"
 }
 
+# THE PURGE IS AN ADMIN API CALL, AND THE ADMIN API TAKES THE SERVICE ACCOUNT
+# ITSELF (HTTP Basic, key id : secret) - Unity's own example for this endpoint
+# ("Delete Player Score From All Live Leaderboards", scope
+# live_ops.leaderboards.scores.delete). It used to send the Bearer token from
+# the token exchange, which is proven only for the game-side scores reads; the
+# purge had never run (run 1's boards were empty) until the -1 test entry of
+# 29 Sep. Switched to the documented form before it gets the chance to fail.
+# A player already gone (404) is not a failure: that is the state we want.
 purge() {   # purge <playerId>: from every live board (Admin API, 204 expected)
-  curl -sf -X DELETE -H "Authorization: Bearer ${token}" \
-    "https://services.api.unity.com/leaderboards/v1/projects/${UGS_PROJECT_ID}/environments/${UGS_ENV_ID}/leaderboards/scores/players/$1/purge" > /dev/null
+  local code
+  code=$(curl -sS -o "$BODY" -w '%{http_code}' --retry 3 --retry-all-errors --retry-delay 2 \
+    -X DELETE -u "${UGS_KEY_ID}:${UGS_SECRET_KEY}" \
+    "https://services.api.unity.com/leaderboards/v1/projects/${UGS_PROJECT_ID}/environments/${UGS_ENV_ID}/leaderboards/scores/players/$1/purge") || code="${code:-000}"
+  case "$code" in
+    2*) return 0 ;;
+    404) echo "purge: player already has no live scores (HTTP 404) - nothing to do" ;;
+    *) echo "FAILED: purge - HTTP $code - $(head -c 300 "$BODY" | tr '\n' ' ')" >&2; return 22 ;;
+  esac
 }
 
 # ---- deletions first: every player below zero, read from each board's end ----
@@ -93,5 +135,5 @@ mkdir -p "$(dirname "$OUT")"
 # Pretty-printed, so the "updated" time sits on a line of its own and the
 # workflow can tell a real change from a new timestamp.
 jq . "$tmp" > "$OUT"
-rm -f "$tmp"
+rm -f "$tmp" "$BODY"
 echo "wrote $OUT ($(wc -c < "$OUT") bytes)"
