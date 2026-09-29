@@ -4,6 +4,56 @@
    No pictures: DROP 10 (Pep, 2026-09-24) rules out AI pictures, and nothing else
    is needed. */
 
+/* THE FONTS ARE SERVED FROM THIS SITE, NOT FROM GOOGLE FONTS (NEXT.md DROP 69
+   item 7). A Google Fonts link sends every visitor's IP address to Google, and
+   the privacy policy names no such partner (store/privacy-policy-check.md W1).
+   So no page may load anything from fonts.googleapis.com or fonts.gstatic.com.
+
+   The files in fonts/ are byte-for-byte the game's own copies:
+     Cinzel-Variable.ttf           from Assets/Art/Fonts/ (weights 400 to 900)
+     CormorantGaramond-*.ttf       from Assets/Art/Fonts/Skyquest/
+   Both families are under the SIL Open Font License 1.1, which allows
+   redistribution as long as the licence travels with the fonts - that is why
+   Cinzel-OFL.txt and OFL-CormorantGaramond.txt sit in fonts/ too. Upload them
+   with the fonts, never the fonts alone.
+
+   The set matches what the Google link asked for: Cinzel 400 and 600,
+   Cormorant Garamond 400, 600 and 400 italic. display=swap there is
+   font-display: swap here: the text shows at once in Georgia and changes
+   font when the file arrives. */
+
+@font-face {
+  font-family: "Cinzel";
+  src: url("fonts/Cinzel-Variable.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("fonts/CormorantGaramond-400.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("fonts/CormorantGaramond-600.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("fonts/CormorantGaramond-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --sky-top: #1C2438;
   --sky-bottom: #05070C;
