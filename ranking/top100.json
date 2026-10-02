@@ -1,13 +1,25 @@
 {
-  "updated": "2026-09-29T02:18:48Z",
+  "updated": "2026-10-02T23:54:41Z",
   "weekly": {
-    "total": 0,
-    "entries": [],
+    "total": 1,
+    "entries": [
+      {
+        "r": 1,
+        "n": "",
+        "s": 233
+      }
+    ],
     "marks": []
   },
   "alltime": {
-    "total": 0,
-    "entries": [],
+    "total": 1,
+    "entries": [
+      {
+        "r": 1,
+        "n": "",
+        "s": 233
+      }
+    ],
     "marks": []
   }
 }
