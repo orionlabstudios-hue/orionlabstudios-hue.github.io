@@ -1,15 +1,26 @@
 {
-  "updated": "2026-10-05T02:13:19Z",
+  "updated": "2026-10-05T18:41:07Z",
   "weekly": {
-    "total": 0,
-    "entries": [],
-    "marks": []
-  },
-  "alltime": {
     "total": 1,
     "entries": [
       {
         "r": 1,
+        "n": "King",
+        "s": 578
+      }
+    ],
+    "marks": []
+  },
+  "alltime": {
+    "total": 2,
+    "entries": [
+      {
+        "r": 1,
+        "n": "King",
+        "s": 578
+      },
+      {
+        "r": 2,
         "n": "",
         "s": 233
       }
