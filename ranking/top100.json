@@ -1,8 +1,14 @@
 {
-  "updated": "2026-10-12T01:29:21Z",
+  "updated": "2026-10-17T19:58:21Z",
   "weekly": {
-    "total": 0,
-    "entries": [],
+    "total": 1,
+    "entries": [
+      {
+        "r": 1,
+        "n": "",
+        "s": 35
+      }
+    ],
     "marks": []
   },
   "alltime": {
